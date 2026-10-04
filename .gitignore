@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+release/
+
+# Build artifacts that `npm run build` regenerates.
+# The helper is a 10 MB self-contained executable and the server is an esbuild bundle, so
+# neither belongs in git history.
+resources/input/
+resources/server/
+
+# .NET build output for the remote-control helper
+native/PeerLink.Input/bin/
+native/PeerLink.Input/obj/
+
+# Local settings and logs
+*.log
+.env
+.env.*
+*.local
+
+# Editor / OS noise
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+.DS_Store

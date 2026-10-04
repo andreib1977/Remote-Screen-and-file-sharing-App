@@ -1,0 +1,21 @@
+# Normalise line endings so the repository stays consistent across Windows, macOS and Linux.
+* text=auto eol=lf
+
+# Windows-only scripts keep CRLF so they behave in cmd.exe and PowerShell.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+*.nsh text eol=crlf
+*.nsi text eol=crlf
+
+# Binary files: never diff or merge these.
+*.exe binary
+*.dll binary
+*.ico binary
+*.png binary
+*.jpg binary
+*.7z binary
+*.zip binary
+
+# Keep the repository language stats honest.
+package-lock.json linguist-generated=true

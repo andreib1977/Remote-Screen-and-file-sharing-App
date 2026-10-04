@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <!-- Plain net8.0: the helper only needs BCL + P/Invoke, no Windows Desktop framework. -->
+    <TargetFramework>net8.0</TargetFramework>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>PeerLink.Input</AssemblyName>
+    <RootNamespace>PeerLink.Input</RootNamespace>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <DebugType>none</DebugType>
+    <RollForward>LatestMajor</RollForward>
+  </PropertyGroup>
+
+  <!--
+    Self-contained + trimmed + single file.
+
+    Windows does not ship the .NET runtime, so a framework-dependent helper would fail on a
+    clean machine and take remote control with it - screen sharing and file transfer would
+    still work, but "it installed and half the app doesn't work" is not good enough.
+
+    Trimming is what makes that affordable: 64 MB self-contained becomes ~12 MB. It is only
+    safe because Program.cs writes JSON by hand instead of using the reflection-based
+    serializer, which the linker cannot see through (see the comment on the Json class).
+  -->
+  <PropertyGroup>
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <PublishTrimmed>true</PublishTrimmed>
+    <TrimMode>full</TrimMode>
+    <!-- Single-file self-extraction needs somewhere to unpack native libraries. -->
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <!-- Trimming warnings are errors here: a silently stripped member is a broken protocol. -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TrimmerSingleWarn>false</TrimmerSingleWarn>
+  </PropertyGroup>
+
+</Project>

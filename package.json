@@ -1,0 +1,111 @@
+{
+  "name": "peerlink",
+  "productName": "PeerLink",
+  "version": "1.0.0",
+  "private": true,
+  "description": "PeerLink - minimal screen sharing, remote desktop control and unlimited-size peer-to-peer file transfer.",
+  "author": "PeerLink",
+  "license": "MIT",
+  "main": "dist/main/main.js",
+  "scripts": {
+    "dev": "concurrently -k -n VITE,ELECTRON -c cyan,magenta \"npm:dev:renderer\" \"npm:dev:electron\"",
+    "dev:renderer": "vite",
+    "dev:electron": "wait-on tcp:5273 && cross-env PEERLINK_DEV=1 electron .",
+    "build": "npm run build:main && npm run build:preload && npm run build:renderer && npm run build:helper && npm run build:server",
+    "build:main": "esbuild src/main/main.ts --bundle --platform=node --target=node20 --format=cjs --external:electron --outfile=dist/main/main.js --sourcemap",
+    "build:preload": "esbuild src/main/preload.ts --bundle --platform=node --target=node20 --format=cjs --external:electron --outfile=dist/preload/preload.js",
+    "build:renderer": "vite build",
+    "build:helper": "node -e \"require('fs').rmSync('resources/input',{recursive:true,force:true})\" && dotnet publish native/PeerLink.Input/PeerLink.Input.csproj -c Release -o resources/input -v quiet",
+    "build:server": "esbuild server/signal.js --bundle --platform=node --target=node20 --format=cjs --outfile=resources/server/signal.js",
+    "package": "npm run build && npm run patch:nsis && electron-builder --win --publish never",
+    "package:dir": "npm run build && npm run patch:nsis && electron-builder --win --dir --publish never",
+    "patch:nsis": "node scripts/patch-nsis-romanian.js",
+    "ui:check": "node scripts/ui-check.js",
+    "start": "electron .",
+    "signal": "node server/signal.js",
+    "test": "vitest run",
+    "test:e2e": "node scripts/e2e-smoke.js",
+    "test:handover": "node scripts/e2e-handover.js",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.4",
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.0",
+    "@types/ws": "^8.5.12",
+    "@vitejs/plugin-react": "^4.3.2",
+    "concurrently": "^9.0.1",
+    "cross-env": "^7.0.3",
+    "electron": "^32.2.0",
+    "electron-builder": "^25.1.8",
+    "esbuild": "^0.24.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.8",
+    "vitest": "^2.1.2",
+    "wait-on": "^8.0.1"
+  },
+  "build": {
+    "appId": "dev.peerlink.app",
+    "productName": "PeerLink",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "dist/**/*",
+      "package.json",
+      "!**/*.map"
+    ],
+    "extraResources": [
+      {
+        "from": "resources/input",
+        "to": "input"
+      },
+      {
+        "from": "resources/server",
+        "to": "server"
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": "always",
+      "createStartMenuShortcut": true,
+      "shortcutName": "PeerLink",
+      "artifactName": "PeerLink-${version}-setup.exe",
+      "uninstallDisplayName": "PeerLink",
+      "installerLanguages": [
+        "en_US",
+        "ro_RO"
+      ],
+      "language": "1033",
+      "displayLanguageSelector": true,
+      "include": "build/installer.nsh"
+    },
+    "portable": {
+      "artifactName": "PeerLink-${version}-portable.exe"
+    }
+  }
+}
