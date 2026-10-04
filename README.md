@@ -15,8 +15,9 @@ account. Available in **English** and **Română**.
 
 ## Get it running
 
-**From a packaged build:** run `PeerLink-<version>-setup.exe`. It installs per-user (no admin
-prompt) and creates a **desktop shortcut** plus a Start Menu entry.
+**From a packaged build:** download **`PeerLink-<version>-setup.exe`** from the
+[latest release](../../releases/latest) and run it. It installs per-user (no admin prompt) and
+creates a **desktop shortcut** plus a Start Menu entry.
 
 **From this repository:** the installer is not committed (build artifacts are ignored), so
 build it first:
