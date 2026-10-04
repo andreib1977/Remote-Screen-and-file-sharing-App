@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "private": true,
   "description": "PeerLink - minimal screen sharing, remote desktop control and unlimited-size peer-to-peer file transfer.",
-  "author": "PeerLink",
+  "author": "Andrei Barca",
   "license": "MIT",
   "main": "dist/main/main.js",
   "scripts": {
