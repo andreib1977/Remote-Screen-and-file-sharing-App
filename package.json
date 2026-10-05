@@ -11,7 +11,7 @@
     "dev": "concurrently -k -n VITE,ELECTRON -c cyan,magenta \"npm:dev:renderer\" \"npm:dev:electron\"",
     "dev:renderer": "vite",
     "dev:electron": "wait-on tcp:5273 && cross-env PEERLINK_DEV=1 electron .",
-    "build": "npm run build:main && npm run build:preload && npm run build:renderer && npm run build:helper && npm run build:server",
+    "build": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\" && npm run build:main && npm run build:preload && npm run build:renderer && npm run build:helper && npm run build:server",
     "build:main": "esbuild src/main/main.ts --bundle --platform=node --target=node20 --format=cjs --external:electron --outfile=dist/main/main.js --sourcemap",
     "build:preload": "esbuild src/main/preload.ts --bundle --platform=node --target=node20 --format=cjs --external:electron --outfile=dist/preload/preload.js",
     "build:renderer": "vite build",
